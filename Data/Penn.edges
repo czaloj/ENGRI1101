@@ -1,0 +1,140 @@
+Count [30]
+
+%SET [Ithaca|0]
+%SET [Elmira|1]
+%SET [Binghamton|2]
+%SET [Middletown|3]
+%SET [Scranton|4]
+%SET [Stroudsburg|5]
+%SET [Newark|6]
+%SET [NewYork|7]
+%SET [Philadelphia|8]
+%SET [Wilmington|9]
+%SET [AtlanticCity|10]
+%SET [Baltimore|11]
+%SET [WashingtonDC|12]
+%SET [Harrisburg|13]
+%SET [Pittsburgh|14]
+%SET [Allentown|15]
+%SET [Williamsport|16]
+%SET [Wheeling|17]
+
+Edge [0|@Ithaca@|@Elmira@|False]
+ed [45|1|0]
+edcolor [138|43|226|255]
+
+Edge [1|@Binghamton@|@Ithaca@|False]
+ed [62|1|0]
+edcolor [138|43|226|255]
+
+Edge [2|@Elmira@|@Binghamton@|False]
+ed [73|1|0]
+edcolor [138|43|226|255]
+
+Edge [3|@Binghamton@|@Middletown@|False]
+ed [149|1|0]
+edcolor [138|43|226|255]
+
+Edge [4|@Middletown@|@Scranton@|False]
+ed [75|1|0]
+edcolor [138|43|226|255]
+
+Edge [5|@Scranton@|@Binghamton@|False]
+ed [70|1|0]
+edcolor [138|43|226|255]
+
+Edge [6|@Middletown@|@NewYork@|False]
+ed [107|1|0]
+edcolor [138|43|226|255]
+
+Edge [7|@Middletown@|@Newark@|False]
+ed [104|1|0]
+edcolor [138|43|226|255]
+
+Edge [8|@Scranton@|@Stroudsburg@|False]
+ed [53|1|0]
+edcolor [138|43|226|255]
+
+Edge [9|@Scranton@|@Allentown@|False]
+ed [109|1|0]
+edcolor [138|43|226|255]
+
+Edge [10|@Allentown@|@Newark@|False]
+ed [110|1|0]
+edcolor [138|43|226|255]
+
+Edge [11|@Stroudsburg@|@Newark@|False]
+ed [84|1|0]
+edcolor [138|43|226|255]
+
+Edge [12|@Stroudsburg@|@Philadelphia@|False]
+ed [128|1|0]
+edcolor [138|43|226|255]
+
+Edge [13|@Middletown@|@Stroudsburg@|False]
+ed [80|1|0]
+edcolor [138|43|226|255]
+
+Edge [14|@Newark@|@Philadelphia@|False]
+ed [122|1|0]
+edcolor [138|43|226|255]
+
+Edge [15|@Newark@|@NewYork@|False]
+ed [30|1|0]
+edcolor [138|43|226|255]
+
+Edge [16|@Allentown@|@Philadelphia@|False]
+ed [77|1|0]
+edcolor [138|43|226|255]
+
+Edge [17|@Philadelphia@|@AtlanticCity@|False]
+ed [80|1|0]
+edcolor [138|43|226|255]
+
+Edge [18|@Philadelphia@|@Wilmington@|False]
+ed [53|1|0]
+edcolor [138|43|226|255]
+
+Edge [19|@AtlanticCity@|@Wilmington@|False]
+ed [106|1|0]
+edcolor [138|43|226|255]
+
+Edge [20|@Wilmington@|@Baltimore@|False]
+ed [96|1|0]
+edcolor [138|43|226|255]
+
+Edge [21|@Baltimore@|@WashingtonDC@|False]
+ed [67|1|0]
+edcolor [138|43|226|255]
+
+Edge [22|@WashingtonDC@|@Harrisburg@|False]
+ed [167|1|0]
+edcolor [138|43|226|255]
+
+Edge [23|@Harrisburg@|@Baltimore@|False]
+ed [108|1|0]
+edcolor [138|43|226|255]
+
+Edge [24|@Harrisburg@|@Williamsport@|False]
+ed [121|1|0]
+edcolor [138|43|226|255]
+
+Edge [25|@WashingtonDC@|@Wheeling@|False]
+ed [402|1|0]
+edcolor [138|43|226|255]
+
+Edge [26|@Wheeling@|@Pittsburgh@|False]
+ed [70|1|0]
+edcolor [138|43|226|255]
+
+Edge [27|@Pittsburgh@|@Harrisburg@|False]
+ed [288|1|0]
+edcolor [138|43|226|255]
+
+Edge [28|@Williamsport@|@Pittsburgh@|False]
+ed [246|1|0]
+edcolor [138|43|226|255]
+
+Edge [29|@Elmira@|@Williamsport@|False]
+ed [113|1|0]
+edcolor [138|43|226|255]

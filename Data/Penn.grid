@@ -1,0 +1,7 @@
+#Use This To Set The Center Of The Map
+%SET [MapCenter|Harrisburg, PN]
+
+Grid	[2048|2048]
+GMap	[1024|1024|7|2|@MapCenter@]
+
+%UNSET [MapCenter]

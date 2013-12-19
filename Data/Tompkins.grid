@@ -1,0 +1,7 @@
+#Use This To Set The Center Of The Map
+%SET [MapCenter|Gothics Way Ithaca, NY]
+
+Grid	[500|500]
+GMap	[500|500|12|2|@MapCenter@]
+
+%UNSET [MapCenter]

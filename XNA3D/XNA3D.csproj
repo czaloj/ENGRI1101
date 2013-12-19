@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{CE49B324-184B-431B-B11A-8ED41D223485}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XNA3D</RootNamespace>
+    <AssemblyName>XNA3D</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XnaProfile>Reach</XnaProfile>
+    <XnaCrossPlatformGroupID>a8949019-251f-4f5d-a85e-bf765fa1aa98</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>false</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'HIDEF|x86'">
+    <AssemblyName>XNA3DHIDEF</AssemblyName>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS, HIDEF</DefineConstants>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XnaProfile>HiDef</XnaProfile>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'REACH|x86'">
+    <AssemblyName>XNA3DREACH</AssemblyName>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS, REACH</DefineConstants>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XnaProfile>Reach</XnaProfile>
+    <Optimize>true</Optimize>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DeferredRendering\Lights\ACLightRenderer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DeferredRendering\Lights\LightEffect.cs" />
+    <Compile Include="DeferredRendering\Lights\PointLight.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DeferredRendering\Lights\Sun.cs" />
+    <Compile Include="Extensions\Graphics.cs" />
+    <Compile Include="Extensions\TexExtensions.cs" />
+    <Compile Include="Extensions\Transform.cs" />
+    <Compile Include="Graphics\UVRectList.cs" />
+    <Compile Include="Objects\ObjectLinking.cs" />
+    <Compile Include="ZDR\Animation.cs" />
+    <Compile Include="ZDR\AnimationTimeline.cs" />
+    <Compile Include="Cameras\ACCamera.cs" />
+    <Compile Include="Connected\Body.cs" />
+    <Compile Include="Cameras\ConstrainedCamera.cs" />
+    <Compile Include="Cameras\FPSCamera.cs" />
+    <Compile Include="Cameras\FreeCamera.cs" />
+    <Compile Include="Connected\Skeleton.cs" />
+    <Compile Include="DeferredRendering\DeferredRenderer.cs" />
+    <Compile Include="DeferredRendering\FullScreenQuad.cs" />
+    <Compile Include="DeferredRendering\Lights\ACLight.cs" />
+    <Compile Include="DeferredRendering\Lights\DirectionalLight.cs" />
+    <Compile Include="DeferredRendering\Lights\SpotLight.cs" />
+    <Compile Include="DeferredRendering\Skydome.cs" />
+    <Compile Include="DeferredRendering\VertexDeferred.cs" />
+    <Compile Include="Extensions\M3Info.cs" />
+    <Compile Include="Extensions\MatrixExt.cs" />
+    <Compile Include="Extensions\MeshCreator.cs" />
+    <Compile Include="Extensions\VectorExt.cs" />
+    <Compile Include="Objects\Interfaces\I3DObject.cs" />
+    <Compile Include="Objects\ObjectProcessor.cs" />
+    <Compile Include="Objects\AC3DDrawable.cs" />
+    <Compile Include="Objects\Graphics\ModelEffect.cs" />
+    <Compile Include="Objects\GameModel.cs" />
+    <Compile Include="Objects\Data\GameModelData.cs" />
+    <Compile Include="Objects\GameObject.cs" />
+    <Compile Include="Objects\Data\GameObjectData.cs" />
+    <Compile Include="Objects\Interfaces\I3DDrawable.cs" />
+    <Compile Include="Objects\Interfaces\IModelHolder.cs" />
+    <Compile Include="Objects\PhysicalObject.cs" />
+    <Compile Include="Objects\Data\PhysicalObjectData.cs" />
+    <Compile Include="Physics\CollisionHandler.cs" />
+    <Compile Include="Physics\CollisionTypes.cs" />
+    <Compile Include="Physics\IBody.cs" />
+    <Compile Include="Physics\PhysData.cs" />
+    <Compile Include="Physics\PhysModifiers.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XYZ_DIRECTION.cs" />
+    <Compile Include="ZDR\Importer.cs" />
+    <Compile Include="ZDR\VertexConverters.cs" />
+    <Compile Include="ZDR\ZDR.cs" />
+    <Compile Include="ZDR\ZModel.cs" />
+    <Compile Include="ZDR\ZModelIO.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="DeferredRendering\Effects\Clear.fx" />
+    <Content Include="DeferredRendering\Effects\Composition.fx" />
+    <Content Include="DeferredRendering\Effects\Directional.fx" />
+    <Content Include="DeferredRendering\Effects\GBuffer.fx" />
+    <Content Include="DeferredRendering\Effects\GBufferSkinning.fx" />
+    <Content Include="DeferredRendering\Effects\SkyDome.fx" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZLibrary\ZLibrary.csproj">
+      <Project>{0159EB38-AE53-4C42-A8EE-CB82DD69DD87}</Project>
+      <Name>ZLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>

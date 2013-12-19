@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{E9ADA455-8877-4B18-B4DA-55E06132E3CD}</ProjectGuid>
+    <ProjectTypeGuids>{6D335F3A-9D43-41b4-9D22-F6F17C4BE596};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>XNA2D</RootNamespace>
+    <AssemblyName>XNA2D</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
+    <XnaPlatform>Windows</XnaPlatform>
+    <XnaProfile>Reach</XnaProfile>
+    <XnaCrossPlatformGroupID>36a6ec7c-54ae-4cd9-b0aa-a382ef17aeff</XnaCrossPlatformGroupID>
+    <XnaOutputType>Library</XnaOutputType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>queue</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>false</XnaCompressContent>
+    <AllowUnsafeBlocks>false</AllowUnsafeBlocks>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <DocumentationFile>
+    </DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\bin\</OutputPath>
+    <DefineConstants>TRACE;WINDOWS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoStdLib>true</NoStdLib>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+    <PlatformTarget>x86</PlatformTarget>
+    <XnaCompressContent>true</XnaCompressContent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.GamerServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Video, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Avatar, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Net, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Microsoft.Xna.Framework.Storage, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="mscorlib">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>4.0</RequiredTargetFramework>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System.Net">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Cameras\Camera2D.cs" />
+    <Compile Include="Framework\Camera2D.cs" />
+    <Compile Include="Framework\Collision\CollisionInformation.cs" />
+    <Compile Include="Framework\Collision\CollisionLink.cs" />
+    <Compile Include="Framework\Collision\CollisionLinkAABB2.cs" />
+    <Compile Include="Framework\Collision\CollisionLinkAABBRadial.cs" />
+    <Compile Include="Framework\Collision\CollisionLinkRadial2.cs" />
+    <Compile Include="Framework\Collision\COLLISION_TYPE.cs" />
+    <Compile Include="Framework\SpriteDrawList.cs" />
+    <Compile Include="Framework\SpriteFile.cs" />
+    <Compile Include="Framework\SpriteList.cs" />
+    <Compile Include="Framework\SpriteTexture.cs" />
+    <Compile Include="Framework\SpriteTextureList.cs" />
+    <Compile Include="Framework\SpriteTextureOptions.cs" />
+    <Compile Include="Interfaces\Collision\ICollisionAABB.cs" />
+    <Compile Include="Interfaces\Collision\ICollisionCalculator.cs" />
+    <Compile Include="Interfaces\Collision\ICollisionContainer.cs" />
+    <Compile Include="Interfaces\Collision\ICollisionRadial.cs" />
+    <Compile Include="Interfaces\Collision\ISpriteCollideable.cs" />
+    <Compile Include="Interfaces\Collision\ISpriteCollideableAABB.cs" />
+    <Compile Include="Interfaces\Collision\ISpriteCollideableRadial.cs" />
+    <Compile Include="Interfaces\ISpriteBody.cs" />
+    <Compile Include="Interfaces\ISpriteTextureBody.cs" />
+    <Compile Include="Interfaces\ISpriteTextureHolder.cs" />
+    <Compile Include="Interfaces\ISpriteVisible.cs" />
+    <Compile Include="Interfaces\IXNA2DSprite.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sprites\Abstract\ACVisibleSprite.cs" />
+    <Compile Include="Sprites\CircleSprite.cs" />
+    <Compile Include="Sprites\Collision\ACCollisionSprite.cs" />
+    <Compile Include="Sprites\Collision\ACCollisionSpriteAABB.cs" />
+    <Compile Include="Sprites\Collision\ACCollisionSpriteRadial.cs" />
+    <Compile Include="Sprites\RectangleSprite.cs" />
+    <Compile Include="Sprites\TextureSprite.cs" />
+    <Compile Include="XNA2DProcessor.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ZLibrary\ZLibrary.csproj">
+      <Project>{0159EB38-AE53-4C42-A8EE-CB82DD69DD87}</Project>
+      <Name>ZLibrary</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
+  <!--
+      To modify your build process, add your task inside one of the targets below and uncomment it. 
+      Other similar extension points exist, see Microsoft.Common.targets.
+      <Target Name="BeforeBuild">
+      </Target>
+      <Target Name="AfterBuild">
+      </Target>
+    -->
+</Project>
