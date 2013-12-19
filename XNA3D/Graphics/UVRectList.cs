@@ -15,7 +15,7 @@ namespace XNA3D.Graphics
 #if HIDEF
         public static readonly IndexElementSize IndexSize = IndexElementSize.ThirtyTwoBits;
         public const int MaxRectangles = 500000;        
-#elif REACH
+#else
         public static readonly IndexElementSize IndexSize = IndexElementSize.SixteenBits;
         public const int MaxRectangles = 30000;
 #endif
