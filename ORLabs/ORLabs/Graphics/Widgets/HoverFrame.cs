@@ -22,6 +22,7 @@ namespace ORLabs.Graphics.Widgets
         }
         public static void create<T>(ref T f, WidgetFrame frame, Vector2 size, Color cb) where T : Frame
         {
+            f.Texture = pixel;
             f.visible = false;
             f.transform.Frame = frame;
             f.transform.RectSize = size;
@@ -35,6 +36,15 @@ namespace ORLabs.Graphics.Widgets
             get{return transform;}
         }
 
+        private Texture2D texture;
+        private Vector2 tScale;
+        public Texture2D Texture {
+            private get { return texture; }
+            set {
+                texture = value;
+                tScale = new Vector2(1f / texture.Width, 1f / texture.Height);
+            }
+        }
         public Vector2 StartLocation
         {
             get { return transform.Frame.Position; }
@@ -79,13 +89,13 @@ namespace ORLabs.Graphics.Widgets
             if (visible)
             {
                 batch.Draw(
-                    pixel,
+                    Texture,
                     StartLocation,
                     null,
                     Color,
                     transform.Frame.Rotation,
                     Vector2.Zero,
-                    transform.Frame.Scaling * transform.RectSize,
+                    transform.Frame.Scaling * transform.RectSize * tScale,
                     SpriteEffects.None,
                     transform.Frame.Depth
                     );

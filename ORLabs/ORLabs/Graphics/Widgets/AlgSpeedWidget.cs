@@ -12,25 +12,28 @@ using XNA3D.Graphics;
 using ORLabs.Framework;
 using ORLabs.Screens;
 
-namespace ORLabs.Graphics.Widgets
-{
-    public class AlgSpeedWidget : IMTransVisible
-    {
-        private Texture2D pixel;
+namespace ORLabs.Graphics.Widgets {
+    public class AlgSpeedWidget : IMTransVisible {
+        private Texture2D pixel, pause, play, next;
         private Frame backFrame;
         private Frame slideExtents;
-        private HoverFrame slider;
+        private HoverFrame slider, pauseButton, nextButton;
         private bool isMoving;
         private MTransVisibleList slm;
         private Color csSlow, csFast, csHover;
+        bool paused;
 
         public float Percent { get; private set; }
         public event Action<float> OnNewSpeed;
+        public event Action OnNextStep;
 
-        public AlgSpeedWidget(Texture2D pixelTex, Info info)
-        {
+        public AlgSpeedWidget(Texture2D[] t, Info info) {
             isMoving = false;
-            pixel = pixelTex;
+            paused = true;
+            pixel = t[0];
+            pause = t[1];
+            play = t[2];
+            next = t[3];
 
             WidgetFrame wfSlideExtents = new WidgetFrame((info.BackFrameSize - info.SliderExtentSize) / 2f, 0, Vector2.One, 0);
             WidgetFrame wfSOff = new WidgetFrame(new Vector2(0, -(info.SliderSize.Y - info.SliderExtentSize.Y) / 2f), 0);
@@ -41,7 +44,15 @@ namespace ORLabs.Graphics.Widgets
             Frame.create<Frame>(ref slideExtents, WidgetFrame.Identity, info.SliderExtentSize, info.CSEFrame);
             slider = new HoverFrame();
             HoverFrame.create<HoverFrame>(ref slider, WidgetFrame.Identity, info.SliderSize, info.CSSlow, info.CSHover);
-            
+
+            Vector2 square = new Vector2(info.BackFrameSize.Y, info.BackFrameSize.Y);
+            pauseButton = new HoverFrame();
+            HoverFrame.create<HoverFrame>(ref pauseButton, WidgetFrame.Identity, square, info.CBackFrame, info.CSHover);
+            pauseButton.Texture = play;
+            nextButton = new HoverFrame();
+            HoverFrame.create<HoverFrame>(ref nextButton, WidgetFrame.Identity, square, info.CBackFrame, info.CSHover);
+            nextButton.Texture = next;
+
             csSlow = info.CSSlow; csFast = info.CSFast; csHover = info.CSHover;
 
             slm = new MTransVisibleList(
@@ -50,49 +61,57 @@ namespace ORLabs.Graphics.Widgets
             ml = new MTransVisibleList(
                 new MTVLBinding(backFrame, WidgetFrame.Identity),
                 new MTVLBinding(slideExtents, wfSlideExtents),
-                new MTVLBinding(slm, wfSlideExtents)
+                new MTVLBinding(slm, wfSlideExtents),
+                new MTVLBinding(pauseButton, new WidgetFrame(new Vector2(info.BackFrameSize.X, 0), 0)),
+                new MTVLBinding(nextButton, new WidgetFrame(new Vector2(info.BackFrameSize.X + square.X, 0), 0))
                 );
 
             setSliderPercent(0f);
         }
 
-        public void hook()
-        {
+        public void hook() {
             slider.hook();
+            pauseButton.hook();
+            nextButton.hook();
             isMoving = false;
             MouseEventDispatcher.OnMousePress += onMousePress;
             MouseEventDispatcher.OnMouseRelease += onMouseRelease;
             MouseEventDispatcher.OnMouseMotion += onMouseMovement;
         }
-        public void unhook()
-        {
+        public void unhook() {
             slider.unhook();
+            pauseButton.unhook();
+            nextButton.unhook();
             isMoving = false;
             MouseEventDispatcher.OnMousePress -= onMousePress;
             MouseEventDispatcher.OnMouseRelease -= onMouseRelease;
             MouseEventDispatcher.OnMouseMotion -= onMouseMovement;
         }
-        public void onMousePress(Vector2 pos, MOUSE_BUTTON b)
-        {
-            if (b == MOUSE_BUTTON.LEFT_BUTTON && !isMoving && slider.IsHovered && IsVisible)
-            {
-                isMoving = true;
-                slider.unhook();
+        public void onMousePress(Vector2 pos, MOUSE_BUTTON b) {
+            if(b == MOUSE_BUTTON.LEFT_BUTTON && IsVisible) {
+                if(!isMoving && slider.IsHovered) {
+                    isMoving = true;
+                    slider.unhook();
+                }
+                else if(pauseButton.IsHovered) {
+                    paused = !paused;
+                    pauseButton.Texture = paused ? play : pause;
+                    if(paused) setSliderPercent(0);
+                    else setSliderPercent(Percent);
+                }
+                else if(nextButton.IsHovered) {
+                    if(OnNextStep != null) OnNextStep();
+                }
             }
         }
-        public void onMouseRelease(Vector2 pos, MOUSE_BUTTON b)
-        {
-            if (b == MOUSE_BUTTON.LEFT_BUTTON && isMoving && IsVisible)
-            {
+        public void onMouseRelease(Vector2 pos, MOUSE_BUTTON b) {
+            if(b == MOUSE_BUTTON.LEFT_BUTTON && isMoving && IsVisible) {
                 isMoving = false;
-                if (OnNewSpeed != null) { OnNewSpeed(Percent); }
                 slider.hook();
             }
         }
-        public void onMouseMovement(Vector2 pos, Vector2 dis)
-        {
-            if (isMoving && IsVisible)
-            {
+        public void onMouseMovement(Vector2 pos, Vector2 dis) {
+            if(isMoving && IsVisible) {
                 Vector2 tp;
                 tp = WidgetFrame.InvTransform(pos, slideExtents.Transform.Frame);
                 Vector2 d = tp;
@@ -101,62 +120,63 @@ namespace ORLabs.Graphics.Widgets
             }
         }
 
-        public void enable()
-        {
+        public void enable() {
             hook();
+            paused = true;
+            pauseButton.Texture = play;
             isMoving = false;
+            setSliderPercent(0);
         }
-        public void disable()
-        {
+        public void disable() {
             unhook();
+            paused = true;
+            pauseButton.Texture = play;
+            isMoving = false;
             setSliderPercent(0);
         }
 
-        public void setSliderPercent(float p)
-        {
+        public void setSliderPercent(float p) {
             WidgetFrame curOffset = ml.Children[2].Offset;
             curOffset.Position.X = p * slideExtents.Size.X;
             ml.Children[2].Offset = curOffset;
             ml.World = ml.World;
             slider.setColors(Color.Lerp(csSlow, csFast, p), csHover);
             Percent = p;
-            if (OnNewSpeed != null) { OnNewSpeed(Percent); }
+            float speed = Percent * 0.9f + 0.1f;
+            if(OnNewSpeed != null) {
+                if(paused) OnNewSpeed(0);
+                else OnNewSpeed(speed);
+            }
         }
 
-        public void draw(SpriteBatch batch)
-        {
-            if (IsVisible)
-            {
+        public void draw(SpriteBatch batch) {
+            if(IsVisible) {
                 backFrame.draw(batch);
                 slideExtents.draw(batch);
                 slider.draw(batch);
+                pauseButton.draw(batch);
+                nextButton.draw(batch);
             }
         }
 
         private MTransVisibleList ml;
-        public WidgetFrame World
-        {
-            get
-            {
+        public WidgetFrame World {
+            get {
                 return ml.World;
             }
-            set
-            {
+            set {
                 ml.World = value;
             }
         }
 
-        public bool IsVisible
-        {
+        public bool IsVisible {
             get { return ml.IsVisible; }
         }
-        public void setVisible(bool b)
-        {
+        public void setVisible(bool b) {
             ml.setVisible(b);
         }
 
-        public struct Info
-        {
+        public struct Info {
             public Vector2 BackFrameSize;
             public Vector2 SliderExtentSize;
             public Vector2 SliderSize;
@@ -165,6 +185,5 @@ namespace ORLabs.Graphics.Widgets
                 CSEFrame,
                 CSSlow, CSFast, CSHover;
         }
-    
     }
 }

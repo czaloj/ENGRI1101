@@ -8,24 +8,14 @@ using ORLabs.Framework;
 using BlisterUI;
 using XNA3D.Graphics;
 
-namespace ORLabs.Graphics.Widgets
-{
-    public class GraphDataWidget : IMTransVisible
-    {
-        private static Color fontColor;
-        static GraphDataWidget()
-        {
-            fontColor = Color.Black;
-        }
-
-
+namespace ORLabs.Graphics.Widgets {
+    public class GraphDataWidget : IMTransVisible {
         protected string nodeData;
         private const int NodeDataLength = 5 + 16 * 3;
         private const string NodeNoData = "Node:\nNone           \nSelected       \n               ";
         private const string NodeFormat = "Node:\nIndex:    {0,5}\nDegree:   {1,5}\nDistance: {2,5}";
-        public void resetData(ORGraph.Node n)
-        {
-            if (n == null) { nodeData = NodeNoData; }
+        public void resetData(ORGraph.Node n) {
+            if(n == null) { nodeData = NodeNoData; }
             else { nodeData = string.Format(NodeFormat, n.Index, n.Degree, n.Distance); }
         }
 
@@ -34,11 +24,9 @@ namespace ORLabs.Graphics.Widgets
         private const string EdgeNoData = "Edge:\nNone           \nSelected       \n               ";
         private const string EdgeFormat = "Edge:\nIndex:    {0,5}\nWeight:   {1,5}\n               ";
         private const string EdgeFormatFlow = "Edge:\nIndex:    {0,5}\nFlow:     {1,5}\nResidual: {2,5}";
-        public void resetData(ORGraph.Edge e, bool useFlow = false, int flow = 0, int resid = 0)
-        {
-            if (e == null) { edgeData = EdgeNoData; }
-            else
-            {
+        public void resetData(ORGraph.Edge e, bool useFlow = false, int flow = 0, int resid = 0) {
+            if(e == null) { edgeData = EdgeNoData; }
+            else {
                 edgeData = useFlow
                 ? string.Format(EdgeFormatFlow, e.Index, flow, resid)
                 : string.Format(EdgeFormat, e.Index, e.Data.Weight);
@@ -46,50 +34,37 @@ namespace ORLabs.Graphics.Widgets
         }
 
         protected SpriteFont font;
-        protected Texture2D pixel;
+        public Color FontColor { get; set; }
         protected Vector2 backRectPos;
         protected Vector2 backRectSize;
 
-        public GraphDataWidget(SpriteFont f, Texture2D pixelTex)
-        {
+        public GraphDataWidget(SpriteFont f) {
             font = f;
-            pixel = pixelTex;
             nodeData = NodeNoData;
             edgeData = EdgeNoData;
         }
 
-        public void draw(SpriteBatch batch)
-        {
-            if (IsVisible)
-            {
-                batch.Draw(pixel, backRectPos, null, Color.White, 0, Vector2.Zero, backRectSize, SpriteEffects.None, 0);
-                batch.DrawString(font, nodeData + "\n" + edgeData, mWorld.Position, fontColor, mWorld.Rotation, Vector2.Zero, mWorld.Scaling, SpriteEffects.None, mWorld.Depth);
-            }
+        public void draw(SpriteBatch batch) {
+            if(IsVisible) batch.DrawString(font, nodeData + "\n" + edgeData, mWorld.Position, FontColor, mWorld.Rotation, Vector2.Zero, mWorld.Scaling, SpriteEffects.None, mWorld.Depth);
         }
 
         private WidgetFrame mWorld;
-        public WidgetFrame World
-        {
-            get
-            {
+        public WidgetFrame World {
+            get {
                 return mWorld;
             }
-            set
-            {
+            set {
                 mWorld = value;
                 backRectPos = WidgetFrame.Transform(new Vector2(-10, -10), mWorld);
             }
         }
 
-        public bool IsVisible
-        {
+        public bool IsVisible {
             get;
             private set;
         }
-        public void setVisible(bool b)
-        {
-            if (IsVisible != b)
-            {
+        public void setVisible(bool b) {
+            if(IsVisible != b) {
                 IsVisible = b;
             }
         }

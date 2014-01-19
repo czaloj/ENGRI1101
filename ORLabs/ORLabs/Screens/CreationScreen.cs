@@ -14,10 +14,8 @@ using ORLabs.Graphics;
 using ORLabs.Graphics.Widgets;
 using ORLabs.Framework;
 
-namespace ORLabs.Screens
-{
-    public class CreationScreen : GraphScreen
-    {
+namespace ORLabs.Screens {
+    public class CreationScreen : GraphScreen {
         const float ListMoveDuration = 0.2f;
 
         public bool[] KeyFlags = new bool[KeyFlagCount];
@@ -36,8 +34,7 @@ namespace ORLabs.Screens
 
         MTransVisibleList neData;
 
-        public override void build()
-        {
+        public override void build() {
             font = game.Content.Load<SpriteFont>(@"Fonts\Arial12");
 
             #region Node/Edge Data
@@ -66,19 +63,18 @@ namespace ORLabs.Screens
             ORGraph.Node.OnNewHoverNode += updateInfo;
             ORGraph.Edge.OnNewHoverEdge += updateInfo;
 
-            game.Window.ClientSizeChanged += (o, s) =>
-            {
+            game.Window.ClientSizeChanged += (o, s) => {
                 neData.World = new WidgetFrame(new Vector2(game.GraphicsDevice.Viewport.Width - dataFrame.Size.X, 0), 0.5f);
             };
+
+            gr.AsEdge = false;
         }
-        public override void destroy(GameTime gameTime)
-        {
+        public override void destroy(GameTime gameTime) {
             ORGraph.Node.OnNewHoverNode -= updateInfo;
             ORGraph.Edge.OnNewHoverEdge -= updateInfo;
         }
 
-        public override void onEntry(GameTime gameTime)
-        {
+        public override void onEntry(GameTime gameTime) {
             GIOScreen = this;
             neData.setVisible(true);
 
@@ -92,8 +88,7 @@ namespace ORLabs.Screens
             KeyboardEventDispatcher.OnKeyPressed += ORGraph.Edge.OnKeyPress;
             KeyboardEventDispatcher.OnKeyReleased += ORGraph.Edge.OnKeyRelease;
         }
-        public override void onExit(GameTime gameTime)
-        {
+        public override void onExit(GameTime gameTime) {
             neData.setVisible(false);
 
             unregisterCameraInput();
@@ -107,13 +102,11 @@ namespace ORLabs.Screens
             KeyboardEventDispatcher.OnKeyReleased -= ORGraph.Edge.OnKeyRelease;
         }
 
-        public override void update(GameTime gameTime)
-        {
+        public override void update(GameTime gameTime) {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
             updateGraph(dt);
         }
-        public override void draw(GameTime gameTime)
-        {
+        public override void draw(GameTime gameTime) {
             game.GraphicsDevice.Clear(ClearOptions.Target | ClearOptions.DepthBuffer | ClearOptions.Stencil,
                 new Color(216, 216, 216, 255), 1, 0
                 );
@@ -126,37 +119,29 @@ namespace ORLabs.Screens
             game.GraphicsDevice.SetVertexBuffers(null);
         }
 
-        public void onMouseMotion(Vector2 loc, Vector2 move)
-        {
+        public void onMouseMotion(Vector2 loc, Vector2 move) {
             Vector2 w = project(loc);
             graph.checkHover(w);
-            if (mNode != null && movingNode)
-            {
+            if(mNode != null && movingNode) {
                 mNode.Data.Position.X = w.X;
                 mNode.Data.Position.Y = w.Y;
                 gr.rebuild(game.GraphicsDevice);
             }
         }
-        public void onMousePress(Vector2 loc, MOUSE_BUTTON button)
-        {
-            if (IsCamRegistered) { return; }
+        public void onMousePress(Vector2 loc, MOUSE_BUTTON button) {
+            if(IsCamRegistered) { return; }
 
             Vector2 w = project(loc);
-            if (button == MOUSE_BUTTON.LEFT_BUTTON)
-            {
-                if (KeyFlags[KF_Addition])
-                {
-                    graph.addNode(new ORGraph.Node(new NodeData(project(loc), 4f, Color.Red, 0x00)));
+            if(button == MOUSE_BUTTON.LEFT_BUTTON) {
+                if(KeyFlags[KF_Addition]) {
+                    graph.addNode(new ORGraph.Node(new NodeData(w, graph.Grid.GridSize.Length() / 90f, Color.Red, 0x00)));
                     gr.rebuild(game.GraphicsDevice);
                     graph.resizeFit();
                 }
-                else if (KeyFlags[KF_AdditionEdge])
-                {
-                    if (startNode != null)
-                    {
+                else if(KeyFlags[KF_AdditionEdge]) {
+                    if(startNode != null) {
                         ORGraph.Node n = ORGraph.Node.HoveredNode;
-                        if (n != null && startNode != n)
-                        {
+                        if(n != null && startNode != n) {
                             graph.addEdge(new ORGraph.Edge(new EdgeData(
                                 (int)((startNode.Data.Position2 - n.Data.Position2).Length()), Color.BlueViolet, 1f)),
                                 startNode.Index, n.Index, false
@@ -164,22 +149,24 @@ namespace ORLabs.Screens
                             gr.rebuild(game.GraphicsDevice);
                             graph.resizeFit();
                         }
+                        graph.Nodes[startNode.Index].setBColor(Color.Red);
+                        gr.rebuild(game.GraphicsDevice);
                         startNode = null;
                     }
-                    else
-                    {
+                    else {
                         startNode = ORGraph.Node.HoveredNode;
+                        if(startNode != null) {
+                            graph.Nodes[startNode.Index].setBColor(Color.GreenYellow);
+                            gr.rebuild(game.GraphicsDevice);
+                        }
                     }
                 }
-                else if (movingNode)
-                {
+                else if(movingNode) {
                     mNode = ORGraph.Node.HoveredNode;
                 }
-                else if (KeyFlags[KF_Removal])
-                {
+                else if(KeyFlags[KF_Removal]) {
                     ORGraph.Node n = ORGraph.Node.HoveredNode;
-                    if (n != null)
-                    {
+                    if(n != null) {
                         graph.removeNode(n);
                         gr.rebuild(game.GraphicsDevice);
                         graph.resizeFit();
@@ -187,34 +174,28 @@ namespace ORLabs.Screens
                 }
                 else { graph.checkSelection(w); }
             }
-            else if (button == MOUSE_BUTTON.RIGHT_BUTTON)
-            {
-                if (KeyFlags[KF_AdditionEdge]) { startNode = null; }
+            else if(button == MOUSE_BUTTON.RIGHT_BUTTON) {
+                if(KeyFlags[KF_AdditionEdge]) { startNode = null; }
             }
         }
-        public void onMouseRelease(Vector2 loc, MOUSE_BUTTON button)
-        {
+        public void onMouseRelease(Vector2 loc, MOUSE_BUTTON button) {
             mNode = null;
         }
-        public void onMouseWheel(int loc, int dis)
-        {
-            if (IsCamRegistered) { return; }
+        public void onMouseWheel(int loc, int dis) {
+            if(IsCamRegistered) { return; }
             ORGraph.Edge.cycleHovers(ORGraph.Node.HoveredNode);
         }
-        protected override void onMouseWheelCam(int loc, int dis)
-        {
+        protected override void onMouseWheelCam(int loc, int dis) {
             base.onMouseWheelCam(loc, dis);
             var ms = Mouse.GetState();
             graph.checkHover(project(new Vector2(ms.X, ms.Y)));
             gr.rebuild(game.GraphicsDevice);
         }
 
-        public void onKeyPress(object s, KeyEventArgs args)
-        {
+        public void onKeyPress(object s, KeyEventArgs args) {
             var ml = KeyboardEventDispatcher.getCurrentModifiers();
-            if (ml.IsControlPressed) { registerCameraInput(); }
-            switch (args.KeyCode)
-            {
+            if(ml.IsControlPressed) { registerCameraInput(); }
+            switch(args.KeyCode) {
                 case Keys.F2: runGIO(GraphIO.IOTaskType.Load, this); break;
                 case Keys.F3: runGIO(GraphIO.IOTaskType.Save, this); break;
 
@@ -223,15 +204,13 @@ namespace ORLabs.Screens
                 case Keys.Z: KeyFlags[KF_Removal] |= true; break;
 
                 case Keys.R:
-                    if (gio.Visible) gio.Hide();
-
                     graph.clear(nCount, nCount * eAdd);
                     buildThread = new Thread(makeRandGraph);
                     buildThread.IsBackground = true;
                     buildThread.TrySetApartmentState(ApartmentState.STA);
                     buildThread.Priority = ThreadPriority.Normal;
                     buildThread.Start();
-                    
+
                     break;
 
 
@@ -251,12 +230,10 @@ namespace ORLabs.Screens
                 default: break;
             }
         }
-        public void onKeyRelease(object s, KeyEventArgs args)
-        {
+        public void onKeyRelease(object s, KeyEventArgs args) {
             var ml = KeyboardEventDispatcher.getCurrentModifiers();
-            if (!ml.IsControlPressed) { unregisterCameraInput(); }
-            switch (args.KeyCode)
-            {
+            if(!ml.IsControlPressed) { unregisterCameraInput(); }
+            switch(args.KeyCode) {
                 case Keys.Q: KeyFlags[KF_Addition] &= false; break;
                 case Keys.E: KeyFlags[KF_AdditionEdge] &= false; startNode = null; break;
                 case Keys.R: KeyFlags[KF_Removal] &= false; break;
@@ -265,22 +242,18 @@ namespace ORLabs.Screens
             }
         }
 
-        void deleteGraph()
-        {
+        void deleteGraph() {
             ORGraph.clearGraph(graph, 0, 0);
         }
 
-        public void updateInfo(ORGraph.Node n)
-        {
+        public void updateInfo(ORGraph.Node n) {
             nData.setText(getNodeInfo(n));
         }
-        public void updateInfo(ORGraph.Edge e)
-        {
+        public void updateInfo(ORGraph.Edge e) {
             eData.setText(getEdgeInfo(e));
         }
-        public string getNodeInfo(ORGraph.Node n)
-        {
-            if (n == null) { return "==No Node Selected=="; }
+        public string getNodeInfo(ORGraph.Node n) {
+            if(n == null) { return "==No Node Selected=="; }
             string s = string.Format(
 @"==Node==
 Index: {0,4}
@@ -290,9 +263,8 @@ Distance: {2}",
                 );
             return s;
         }
-        public string getEdgeInfo(ORGraph.Edge e)
-        {
-            if (e == null) { return "==No Edge Selected=="; }
+        public string getEdgeInfo(ORGraph.Edge e) {
+            if(e == null) { return "==No Edge Selected=="; }
             string s = string.Format(
 @"==Edge==
 Index: {0,4}
@@ -309,56 +281,47 @@ Weight: {1,4}",
         int gSize = 1000; int nCount = 3000;
         int eAdd = 6, echeck = 3000;
 
-        public void setRandBuildInfo(int gs, RandGraph rg)
-        {
+        public void setRandBuildInfo(int gs, RandGraph rg) {
             gSize = gs;
             nCount = rg.NodeCount;
             eAdd = rg.EdgeAddPerNode;
             echeck = rg.EdgeCheckCount;
         }
-        void makeRandGraph()
-        {
+        void makeRandGraph() {
             MouseEventDispatcher.OnMouseMotion -= onMouseMotion;
             MouseEventDispatcher.OnMouseMotion -= onMouseMotionCam;
-            if (echeck > nCount) { echeck = nCount; }
+            if(echeck > nCount) { echeck = nCount; }
 
             graph.clear(nCount, eAdd * nCount);
             Random r = new Random();
 
             //Add All Nodes
-            for (int i = 0; i < nCount; i++)
-            {
+            for(int i = 0; i < nCount; i++) {
                 Vector2 pos = new Vector2(r.Next(1, gSize), r.Next(1, gSize));
                 Color col = new Color(r.Next(100, 256), r.Next(100, 256), r.Next(100, 256));
                 graph.addNode(new ORGraph.Node(new NodeData(pos, 4f, col, 0x00)));
             }
-            foreach (ORGraph.Node n in graph.Nodes) { n.Distance = double.PositiveInfinity; }
+            foreach(ORGraph.Node n in graph.Nodes) { n.Distance = double.PositiveInfinity; }
 
             //Add All Edges
             MinHeap<NodeDist> nodeDists = new MinHeap<NodeDist>(nCount - 1);
-            for (int ni = 0; ni < nCount; ni++)
-            {
+            for(int ni = 0; ni < nCount; ni++) {
                 nodeDists = new MinHeap<NodeDist>(nCount - 1);
-                for (int ei = 0; ei < echeck; ei++)
-                {
+                for(int ei = 0; ei < echeck; ei++) {
                     int oi = r.Next(0, nCount);
-                    if (ni == oi) { continue; }
-                    else
-                    {
+                    if(ni == oi) { continue; }
+                    else {
                         double d = (graph.Nodes[ni].Data.Position - graph.Nodes[oi].Data.Position).Length();
                         nodeDists.insert(new NodeDist() { Index = oi, Distance = d });
                     }
                 }
-                for (int oi = 0; oi < eAdd; oi++)
-                {
-                    if (nodeDists.Count == 0) { break; }
+                for(int oi = 0; oi < eAdd; oi++) {
+                    if(nodeDists.Count == 0) { break; }
                     NodeDist nd = nodeDists.extract();
-                    if (graph.edgeCount(ni, nd.Index) == 0)
-                    {
+                    if(graph.edgeCount(ni, nd.Index) == 0) {
                         graph.addEdge(new ORGraph.Edge(new EdgeData(nd.Dist, Color.Gray, 1f)), ni, nd.Index);
                     }
-                    else
-                    {
+                    else {
                         oi--;
                     }
                 }
@@ -371,22 +334,19 @@ Weight: {1,4}",
             MouseEventDispatcher.OnMouseMotion += onMouseMotionCam;
         }
 
-        class ProgBar
-        {
+        class ProgBar {
             Rectangle rect;
             Color color;
             VertexPositionColor[] verts;
             short[] ind;
 
-            public ProgBar(Rectangle r, Color c)
-            {
+            public ProgBar(Rectangle r, Color c) {
                 color = c;
                 setRect(r);
                 ind = new short[6] { 0, 1, 2, 2, 1, 3 };
             }
 
-            public void setRect(Rectangle r)
-            {
+            public void setRect(Rectangle r) {
                 rect = r;
                 verts = new VertexPositionColor[4]
                 {
@@ -396,61 +356,50 @@ Weight: {1,4}",
                     new VertexPositionColor(new Vector3(rect.Right, rect.Bottom, 0.5f), color)
                 };
             }
-            public void setWidth(int w)
-            {
+            public void setWidth(int w) {
                 rect.Width = w;
                 setRect(rect);
             }
-            public void setHeight(int h)
-            {
+            public void setHeight(int h) {
                 rect.Height = h;
                 setRect(rect);
             }
 
-            public void draw(GraphicsDevice g)
-            {
+            public void draw(GraphicsDevice g) {
                 g.DrawUserIndexedPrimitives<VertexPositionColor>(PrimitiveType.TriangleList, verts, 0, 4, ind, 0, 2);
             }
         }
-        public struct RandGraph
-        {
+        public struct RandGraph {
             public int NodeCount;
             public int EdgeCheckCount;
             public int EdgeAddPerNode;
 
-            public RandGraph(int nc, int ea, int ec)
-            {
+            public RandGraph(int nc, int ea, int ec) {
                 NodeCount = nc;
                 EdgeCheckCount = ec;
                 EdgeAddPerNode = ea;
             }
         }
-        public struct GridOptions
-        {
+        public struct GridOptions {
             int GSX, GSY, GCW, GCH;
-            public GridOptions(int gsx, int gsy, int gcw, int gch)
-            {
+            public GridOptions(int gsx, int gsy, int gcw, int gch) {
                 GSX = gsx;
                 GSY = gsy;
                 GCW = gcw;
                 GCH = gch;
             }
         }
-        struct NodeDist : IComparable<NodeDist>
-        {
+        struct NodeDist : IComparable<NodeDist> {
             public int Index;
             public double Distance;
 
-            public int Dist
-            {
-                get
-                {
+            public int Dist {
+                get {
                     return (int)Distance;
                 }
             }
 
-            public int CompareTo(NodeDist other)
-            {
+            public int CompareTo(NodeDist other) {
                 return Distance.CompareTo(other.Distance);
             }
         }

@@ -73,7 +73,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <OutputPath>..\bin\</OutputPath>
-    <DefineConstants>TRACE;WINDOWS, REACH</DefineConstants>
+    <DefineConstants>TRACE;WINDOWS, REACH, FANCY</DefineConstants>
     <Optimize>true</Optimize>
     <AssemblyName>ORLabs</AssemblyName>
     <XnaProfile>Reach</XnaProfile>
@@ -158,13 +158,13 @@
     <Compile Include="Algorithms\TSAOR.cs" />
     <Compile Include="Algorithms\TSAOR_MaxFlow.cs" />
     <Compile Include="Algorithms\TSAOR_MinSpanTree.cs" />
-    <Compile Include="Framework\GraphBuilder.cs" />
     <Compile Include="Framework\GraphGrid.cs" />
     <Compile Include="Framework\ORFile.cs" />
     <Compile Include="Framework\ORGraph.cs" />
     <Compile Include="Graphics\GoogleMap.cs" />
     <Compile Include="Graphics\Widgets\AvailableActionsWidget.cs" />
     <Compile Include="Graphics\Widgets\GraphDataWidget.cs" />
+    <Compile Include="Graphics\Widgets\GUI.cs" />
     <Compile Include="GraphIO.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -181,8 +181,6 @@
     <Compile Include="Graphics\Widgets\IVisible.cs" />
     <Compile Include="Graphics\Widgets\SelectionList.cs" />
     <Compile Include="Graphics\Widgets\SimpleText.cs" />
-    <Compile Include="Graphics\Widgets\TextEntry.cs" />
-    <Compile Include="Graphics\Widgets\TimedHoverFrame.cs" />
     <Compile Include="GridDialog.cs">
       <SubType>Form</SubType>
     </Compile>

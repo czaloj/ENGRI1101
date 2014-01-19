@@ -228,7 +228,7 @@ namespace ZLibrary.Graphs
                     ) { t.throwBadArg<int>(0); }
                 E e = new E();
                 e.read(s);
-                addEdge(e, si, ei, ae);
+                addEdge(e, si, ei, !ae);
             }
         }
         public void writeEdges(TokenStream s)

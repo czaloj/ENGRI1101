@@ -10,77 +10,63 @@ using ZLibrary.IO;
 using Microsoft.Xna.Framework;
 using ORLabs.Framework;
 
-namespace ORLabs.Algorithms
-{
-    public enum MinSpanTreeAlgorithm
-    {
+namespace ORLabs.Algorithms {
+    public enum MinSpanTreeAlgorithm {
         KruskalAdd,
         KruskalRemove,
         Prim
     }
-    // TODO: Add Text To Changes
-    public class TSAOR_MinSpanTree : TSAOR<TSAOR_MinSpanTree.Input, TSAOR_MinSpanTree.Output>
-    {
+
+    public class TSAOR_MinSpanTree : TSAOR<TSAOR_MinSpanTree.Input, TSAOR_MinSpanTree.Output> {
         public const byte FlagInAlg = Flags.Bit1;
         public const byte FlagMin = Flags.Bit3;
 
         #region Inner
-        public struct Input
-        {
+        public struct Input {
             public ORGraph.Edge[] Edges;
             public ORGraph.Node[] Nodes;
             public ORGraph.Node Start;
             public MinSpanTreeAlgorithm AlgType;
-            public Input(ORGraph g, MinSpanTreeAlgorithm a = MinSpanTreeAlgorithm.KruskalAdd)
-            {
+            public Input(ORGraph g, MinSpanTreeAlgorithm a = MinSpanTreeAlgorithm.KruskalAdd) {
                 Edges = g.Edges;
                 Nodes = g.Nodes;
                 AlgType = a;
                 Start = null;
             }
-            public Input(ORGraph g, ORGraph.Node n)
-            {
+            public Input(ORGraph g, ORGraph.Node n) {
                 Edges = g.Edges;
                 Nodes = g.Nodes;
                 AlgType = MinSpanTreeAlgorithm.Prim;
                 Start = n;
             }
         }
-        public struct Output
-        {
+        public struct Output {
             public ORGraph.Edge[] Edges;
 
-            public Output(int nCount)
-            {
+            public Output(int nCount) {
                 Edges = new ORGraph.Edge[nCount - 1];
             }
         }
-        public struct EdgeBind : IComparable<EdgeBind>
-        {
+        public struct EdgeBind : IComparable<EdgeBind> {
             private ORGraph.Edge e;
-            public ORGraph.Edge Edge
-            {
+            public ORGraph.Edge Edge {
                 get { return e; }
             }
 
-            public EdgeBind(ORGraph.Edge e)
-            {
+            public EdgeBind(ORGraph.Edge e) {
                 this.e = e;
             }
 
-            public int CompareTo(EdgeBind other)
-            {
+            public int CompareTo(EdgeBind other) {
                 return e.Data.Weight.CompareTo(other.e.Data.Weight);
             }
         }
         #endregion
 
-        protected override void processThread()
-        {
+        protected override void processThread() {
             clearStates();
 
-            switch (input.AlgType)
-            {
+            switch(input.AlgType) {
                 case MinSpanTreeAlgorithm.Prim:
                     result = algPrimThread();
                     break;
@@ -92,38 +78,32 @@ namespace ORLabs.Algorithms
             endThread(true);
         }
 
-        double randhue(Random r)
-        {
-            switch (r.Next(4))
-            {
+        #region Coloring Functions
+        double randhue(Random r) {
+            switch(r.Next(4)) {
                 case 0: return r.NextDouble() * 60 + 0;
                 case 1: return r.NextDouble() * 60 + 60;
                 case 2: return r.NextDouble() * 60 + 120;
                 default: return r.NextDouble() * 60 + 300;
             }
         }
-        void HsvToRgb(double h, double S, double V, out int r, out int g, out int b)
-        {
+        void HsvToRgb(double h, double S, double V, out int r, out int g, out int b) {
             double H = h;
-            while (H < 0) { H += 360; };
-            while (H >= 360) { H -= 360; };
+            while(H < 0) { H += 360; };
+            while(H >= 360) { H -= 360; };
             double R, G, B;
-            if (V <= 0)
-            { R = G = B = 0; }
-            else if (S <= 0)
-            {
+            if(V <= 0) { R = G = B = 0; }
+            else if(S <= 0) {
                 R = G = B = V;
             }
-            else
-            {
+            else {
                 double hf = H / 60.0;
                 int i = (int)Math.Floor(hf);
                 double f = hf - i;
                 double pv = V * (1 - S);
                 double qv = V * (1 - S * f);
                 double tv = V * (1 - S * (1 - f));
-                switch (i)
-                {
+                switch(i) {
 
                     // Red is the dominant color
                     case 0:
@@ -185,15 +165,14 @@ namespace ORLabs.Algorithms
             g = Clamp((int)(G * 255.0));
             b = Clamp((int)(B * 255.0));
         }
-        int Clamp(int i)
-        {
-            if (i < 0) return 0;
-            if (i > 255) return 255;
+        int Clamp(int i) {
+            if(i < 0) return 0;
+            if(i > 255) return 255;
             return i;
         }
+        #endregion
 
-        protected Output algKruskalThread()
-        {
+        protected Output algKruskalThread() {
             Output output = new Output(input.Nodes.Length);
             PartitionTree pt = new PartitionTree(input.Nodes);
             int ei = 0;
@@ -201,54 +180,45 @@ namespace ORLabs.Algorithms
             Color[] colors = new Color[pt.Partitions.Length];
             Random r = new Random();
             int red, green, blue;
-            for (int i = 0; i < colors.Length; i++)
-            {
+            for(int i = 0; i < colors.Length; i++) {
                 HsvToRgb(randhue(r), 1, r.NextDouble() * 0.7 + 0.3, out red, out green, out blue);
                 colors[i] = new Color(red, green, blue, 255);
             }
 
             //Preset
             MinHeap<EdgeBind> heap = new MinHeap<EdgeBind>(input.Edges.Length);
-            foreach (var edge in input.Edges)
-            {
+            foreach(var edge in input.Edges) {
                 edge.Flags = FlagInAlg;
-                addState(new TSAORChange("Setting Up Edges", edge, ORColors.CEPassive));
+                addState(new TSAORChange("Setting Up Edges", edge, AlgColors.CEPassive));
                 heap.insert(new EdgeBind(edge));
             }
-            foreach (var node in input.Nodes)
-            {
+            foreach(var node in input.Nodes) {
                 node.Flags = FlagInAlg;
                 addState(new TSAORChange("Setting Up Nodes", node, colors[node.Index]));
             }
             System.Threading.Thread.Sleep(100);
             handleStepping(25);
 
-            while (heap.Count > 0 && ei < input.Nodes.Length - 1)
-            {
+            while(heap.Count > 0 && ei < input.Nodes.Length - 1) {
                 ORGraph.Edge edge = heap.extract().Edge;
                 ORGraph.Node
                     n1 = edge.Start as ORGraph.Node,
                     n2 = edge.End as ORGraph.Node;
-                if (!n1.Flags.hasFlags(FlagInAlg) ||
+                if(!n1.Flags.hasFlags(FlagInAlg) ||
                     !n2.Flags.hasFlags(FlagInAlg)
-                    )
-                {
+                    ) {
                     continue;
                 }
-                addState(new TSAORChange(string.Format("Looking At Edge {0}", edge.Index), edge, ORColors.CELooking));
+                addState(new TSAORChange(string.Format("Looking At Edge {0}", edge.Index), edge, AlgColors.CELooking));
                 handleStepping(25);
-                if (!pt.loopBetween(n1, n2))
-                {
+                if(!pt.loopBetween(n1, n2)) {
                     Color pc;
                     pt.mergePartitions(n1, n2);
                     int pi = pt.Partitions[n1.Index].PartitionIndex;
                     pc = colors[pi];
-                    foreach (Partition p in pt.Partitions[n1.Index].LinkedPartitions)
-                    {
-                        foreach (ORGraph.Edge ee in p.node)
-                        {
-                            if (ee.Flags.hasFlags(FlagMin))
-                            {
+                    foreach(Partition p in pt.Partitions[n1.Index].LinkedPartitions) {
+                        foreach(ORGraph.Edge ee in p.node) {
+                            if(ee.Flags.hasFlags(FlagMin)) {
                                 addState(new TSAORChange(string.Format("Setting Edge {0} To Partition {1}", ee.Index, pi), ee, pc));
                             }
                         }
@@ -260,111 +230,92 @@ namespace ORLabs.Algorithms
                     Flags.addFlags(ref edge.Flags, FlagMin);
                     handleStepping(25);
                 }
-                else
-                {
-                    addState(new TSAORChange(string.Format("Removing Edge {0} From Tree", edge.Index), edge, ORColors.CExcluded));
+                else {
+                    addState(new TSAORChange(string.Format("Removing Edge {0} From Tree", edge.Index), edge, AlgColors.CExcluded));
                     handleStepping(25);
                 }
             }
 
-            foreach (var e in heap) { addState(new TSAORChange(string.Format("Removing Edge {0} From Tree", e.Edge.Index), e.Edge, ORColors.CExcluded)); }
+            foreach(var e in heap) { addState(new TSAORChange(string.Format("Removing Edge {0} From Tree", e.Edge.Index), e.Edge, AlgColors.CExcluded)); }
             handleStepping(25);
 
-            foreach (var e in input.Edges)
-            {
-                if (!e.Flags.hasFlags(FlagMin))
-                { addState(new TSAORChange("Making Edges Invisible", e, Color.Transparent)); }
+            foreach(var e in input.Edges) {
+                if(!e.Flags.hasFlags(FlagMin)) { addState(new TSAORChange("Making Edges Invisible", e, Color.Transparent)); }
             }
 
             return output;
         }
-        protected Output algPrimThread()
-        {
+        protected Output algPrimThread() {
             Output output = new Output(input.Nodes.Length);
             PartitionTree pt = new PartitionTree(input.Nodes);
             int ei = 0;
 
             //Preset
             MinHeap<EdgeBind> heap = new MinHeap<EdgeBind>(input.Edges.Length);
-            foreach (var edge in input.Edges)
-            {
+            foreach(var edge in input.Edges) {
                 edge.Flags = FlagInAlg;
-                addState(new TSAORChange("Setting Up Edges", edge, ORColors.CEPassive));
+                addState(new TSAORChange("Setting Up Edges", edge, AlgColors.CEPassive));
             }
-            foreach (var node in input.Nodes)
-            {
+            foreach(var node in input.Nodes) {
                 node.Flags = FlagInAlg;
-                addState(new TSAORChange("Setting Up Nodes", node, ORColors.CNPassive));
+                addState(new TSAORChange("Setting Up Nodes", node, AlgColors.CNPassive));
             }
             Flags.addFlags(ref input.Start.Flags, FlagMin);
-            foreach (ORGraph.Edge edge in input.Start)
-            {
+            foreach(ORGraph.Edge edge in input.Start) {
                 heap.insert(new EdgeBind(edge));
-                //addState(new TSAORChange("TODO", edge, CEIndexed));
             }
             System.Threading.Thread.Sleep(100);
             handleStepping(25);
 
-            while (heap.Count > 0 && ei < input.Nodes.Length - 1)
-            {
+            while(heap.Count > 0 && ei < input.Nodes.Length - 1) {
                 ORGraph.Edge edge = heap.extract().Edge;
                 ORGraph.Node
                     n1 = edge.Start as ORGraph.Node,
                     n2 = edge.End as ORGraph.Node;
-                if (!n1.Flags.hasFlags(FlagInAlg) ||
+                if(!n1.Flags.hasFlags(FlagInAlg) ||
                     !n2.Flags.hasFlags(FlagInAlg)
-                    )
-                {
+                    ) {
                     continue;
                 }
-                addState(new TSAORChange(string.Format("Looking At Edge {0}", edge.Index), edge, ORColors.CELooking));
+                addState(new TSAORChange(string.Format("Looking At Edge {0}", edge.Index), edge, AlgColors.CELooking));
                 handleStepping(25);
 
-                if (!pt.loopBetween(n1, n2))
-                {
+                if(!pt.loopBetween(n1, n2)) {
                     pt.mergePartitions(n1, n2);
                     Flags.addFlags(ref edge.Flags, FlagMin);
 
-                    if (!n1.Flags.hasFlags(FlagMin))
-                    {
+                    if(!n1.Flags.hasFlags(FlagMin)) {
                         Flags.addFlags(ref n1.Flags, FlagMin);
-                        foreach (ORGraph.Edge ee in n1)
-                        {
-                            if (!ee.Flags.hasFlags(FlagMin)) { heap.insert(new EdgeBind(ee)); }
-                            addState(new TSAORChange(string.Format("Marking Node As Visited"), n1, ORColors.CEIndexed));
+                        foreach(ORGraph.Edge ee in n1) {
+                            if(!ee.Flags.hasFlags(FlagMin)) { heap.insert(new EdgeBind(ee)); }
+                            addState(new TSAORChange(string.Format("Marking Node As Visited"), n1, AlgColors.CEIndexed));
                         }
                     }
-                    else if (!n2.Flags.hasFlags(FlagMin))
-                    {
+                    else if(!n2.Flags.hasFlags(FlagMin)) {
                         Flags.addFlags(ref n2.Flags, FlagMin);
-                        foreach (ORGraph.Edge ee in n2)
-                        {
-                            if (!ee.Flags.hasFlags(FlagMin)) { heap.insert(new EdgeBind(ee)); }
-                            addState(new TSAORChange(string.Format("Marking Node As Visited"), n2, ORColors.CEIndexed));
+                        foreach(ORGraph.Edge ee in n2) {
+                            if(!ee.Flags.hasFlags(FlagMin)) { heap.insert(new EdgeBind(ee)); }
+                            addState(new TSAORChange(string.Format("Marking Node As Visited"), n2, AlgColors.CEIndexed));
                         }
                     }
 
                     output.Edges[ei++] = edge;
-                    addState(new TSAORChange("Adding Edge To Tree", edge, ORColors.CEResult));
+                    addState(new TSAORChange("Adding Edge To Tree", edge, AlgColors.CEResult));
                     handleStepping(25);
                 }
-                else
-                {
-                    addState(new TSAORChange("Excluding Edge From Tree", edge, ORColors.CExcluded));
+                else {
+                    addState(new TSAORChange("Excluding Edge From Tree", edge, AlgColors.CExcluded));
                     handleStepping(25);
                 }
             }
-            foreach (var e in input.Edges)
-            {
-                if (!e.Flags.hasFlags(FlagMin))
-                { addState(new TSAORChange(string.Format("Making Edge {0} Invisible", e.Index), e, Color.Transparent)); }
+            foreach(var e in input.Edges) {
+                if(!e.Flags.hasFlags(FlagMin)) { addState(new TSAORChange(string.Format("Making Edge {0} Invisible", e.Index), e, Color.Transparent)); }
             }
 
             return output;
         }
 
-        public override TSAOR_MinSpanTree.Output process(TSAOR_MinSpanTree.Input input)
-        {
+        public override TSAOR_MinSpanTree.Output process(TSAOR_MinSpanTree.Input input) {
             throw new NotImplementedException();
         }
     }

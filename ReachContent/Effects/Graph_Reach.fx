@@ -48,8 +48,8 @@ float4 PS_Line(VSO input) : COLOR0
 	}
 	else
 	{
-		color =  lerp(input.Color, input.ColorT, input.Percent.y * cos(input.Percent.x + input.Percent.y));
-		//color.rgb *= (1 - d);
+		color =  lerp(input.Color, input.ColorT, input.Percent.x);
+		// color.rgb *= (1 - d);
 	}
 	return color;
 }

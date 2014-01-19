@@ -8,38 +8,31 @@ using Microsoft.Xna.Framework.Content;
 using ORLabs.Framework;
 using ZLibrary.Graphs;
 
-namespace ORLabs.Graphics.Graphs
-{
-    public class GraphRenderer
-    {
+namespace ORLabs.Graphics.Graphs {
+    public class GraphRenderer {
         #region Static
-        public static readonly DepthStencilState DSS_Nodes = new DepthStencilState()
-       {
-           StencilEnable = true,
-           StencilFunction = CompareFunction.Always,
-           StencilPass = StencilOperation.Replace,
-           ReferenceStencil = 1
-       };
-        public static readonly DepthStencilState DSS_Edges = new DepthStencilState()
-        {
+        public static readonly DepthStencilState DSS_Nodes = new DepthStencilState() {
+            StencilEnable = true,
+            StencilFunction = CompareFunction.Always,
+            StencilPass = StencilOperation.Replace,
+            ReferenceStencil = 1
+        };
+        public static readonly DepthStencilState DSS_Edges = new DepthStencilState() {
             StencilEnable = true,
             StencilFunction = CompareFunction.Equal,
             StencilPass = StencilOperation.Replace,
             ReferenceStencil = 0
-        }; 
+        };
         #endregion
 
         public Effect fxGraph;
-        public EffectTechniqueCollection Techniques
-        {
+        public EffectTechniqueCollection Techniques {
             get { return fxGraph.Techniques; }
         }
-        public EffectPassCollection Passes
-        {
+        public EffectPassCollection Passes {
             get { return fxGraph.CurrentTechnique.Passes; }
         }
-        public EffectParameterCollection Parameters
-        {
+        public EffectParameterCollection Parameters {
             get { return fxGraph.Parameters; }
         }
 
@@ -53,8 +46,7 @@ namespace ORLabs.Graphics.Graphs
         public float Amplitude { get; set; }
         public float Frequency { get; set; }
 
-        public GraphRenderer(GraphicsDevice g, ORGraph gr)
-        {
+        public GraphRenderer(GraphicsDevice g, ORGraph gr) {
             setGraph(gr, g);
             thetaTime = 0;
 
@@ -64,14 +56,12 @@ namespace ORLabs.Graphics.Graphs
             Frequency = 2f;
         }
 
-        public void loadEffect(string file, string technique, ContentManager content)
-        {
+        public void loadEffect(string file, string technique, ContentManager content) {
             fxGraph = content.Load<Effect>(file);
             fxGraph.CurrentTechnique = fxGraph.Techniques[technique];
         }
 
-        public void setGraph(ORGraph gr, GraphicsDevice g)
-        {
+        public void setGraph(ORGraph gr, GraphicsDevice g) {
             graph = gr;
 #if HIDEF
             lEdges = new EdgeList(g, graph.EdgeCount);
@@ -81,27 +71,22 @@ namespace ORLabs.Graphics.Graphs
             lNodes = new NodeList(g, graph.NodeCount);
 #endif
         }
-        public void setCurrentTechnique(string technique)
-        {
+        public void setCurrentTechnique(string technique) {
             fxGraph.CurrentTechnique = fxGraph.Techniques[technique];
         }
-        public void apply(int pIndex)
-        {
+        public void apply(int pIndex) {
             fxGraph.CurrentTechnique.Passes[pIndex].Apply();
         }
 
-        public void rebuild(GraphicsDevice g)
-        {
+        public void rebuild(GraphicsDevice g) {
             ORGraph.Edge e;
             ORGraph.Node n;
 
-            if (lEdges.MaxCount < graph.EdgeCount)
-            { lEdges.append(g, new EdgeInfo[graph.EdgeCount - lEdges.MaxCount]); }
+            if(lEdges.MaxCount < graph.EdgeCount) { lEdges.append(g, new EdgeInfo[graph.EdgeCount - lEdges.MaxCount]); }
             lEdges.begin();
-            for (int i = 0; i < graph.EdgeCount; i++)
-            {
+            for(int i = 0; i < graph.EdgeCount; i++) {
                 e = graph.Edges[i];
-                if (e == null) { break; }
+                if(e == null) { break; }
                 EdgeInfo li = new EdgeInfo(
                     e.Start.Data.Position,
                     e.Data.Color,
@@ -116,13 +101,11 @@ namespace ORLabs.Graphics.Graphs
             }
             lEdges.end();
 
-            if (lNodes.MaxCount < graph.NodeCount)
-            { lNodes.append(g, new NodeInfo[graph.NodeCount - lNodes.MaxCount]); }
+            if(lNodes.MaxCount < graph.NodeCount) { lNodes.append(g, new NodeInfo[graph.NodeCount - lNodes.MaxCount]); }
             lNodes.begin();
-            for (int i = 0; i < graph.NodeCount; i++)
-            {
+            for(int i = 0; i < graph.NodeCount; i++) {
                 n = graph.Nodes[i];
-                if (n == null) { break; }
+                if(n == null) { break; }
                 NodeInfo ni = new NodeInfo(
                     n.Data.Position,
                     Vector2.One * n.Data.Radius,
@@ -135,23 +118,20 @@ namespace ORLabs.Graphics.Graphs
             lNodes.end();
         }
 
-        public void update(float dt)
-        {
+        public void update(float dt) {
             thetaTime = (float)Math.IEEERemainder(thetaTime + dt * (AsEdge ? Frequency : 1), 2 * Math.PI);
-            if (lNodes.ShouldBuild) { lNodes.end(); }
-            if (lEdges.ShouldBuild) { lEdges.end(); }
+            if(lNodes.ShouldBuild) { lNodes.end(); }
+            if(lEdges.ShouldBuild) { lEdges.end(); }
         }
 
-        public void draw(GraphicsDevice g, Matrix mView, Matrix mProjection, Vector2 camVS, Vector2 viewSize)
-        {
+        public void draw(GraphicsDevice g, Matrix mView, Matrix mProjection, Vector2 camVS, Vector2 viewSize) {
             g.RasterizerState = RasterizerState.CullNone;
             g.BlendState = BlendState.AlphaBlend;
-            if (graph.Grid != null)
-            {
+            if(graph.Grid != null) {
                 graph.Grid.draw(g, mView * mProjection, (viewSize / camVS).X * 2f);
             }
 
-            if (lEdges.Count <= 0 && lNodes.Count <= 0) { return; }
+            if(lEdges.Count <= 0 && lNodes.Count <= 0) { return; }
 
             Parameters["World"].SetValue(Matrix.Identity);
             Parameters["View"].SetValue(mView);
@@ -165,16 +145,14 @@ namespace ORLabs.Graphics.Graphs
             Parameters["Transparency"].SetValue(Transparency);
 
             g.DepthStencilState = DSS_Nodes;
-            if (lNodes.Count > 0)
-            {
+            if(lNodes.Count > 0) {
                 Passes["Node"].Apply();
                 lNodes.set(g);
                 lNodes.draw(g);
             }
 
             g.DepthStencilState = DSS_Edges;
-            if (lEdges.Count > 0)
-            {
+            if(lEdges.Count > 0) {
                 Passes["Line"].Apply();
                 lEdges.set(g);
                 lEdges.draw(g);

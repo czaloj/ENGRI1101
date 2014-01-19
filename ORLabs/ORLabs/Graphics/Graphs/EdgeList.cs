@@ -6,16 +6,13 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using ZLibrary.Graphics;
 
-namespace ORLabs.Graphics.Graphs
-{
-    public struct EdgeInfo
-    {
+namespace ORLabs.Graphics.Graphs {
+    public struct EdgeInfo {
         public Vector3 Start, End;
         public float RadiusS, RadiusE;
         public Color ColorS, ColorE, ColorT;
 
-        public EdgeInfo(Vector3 start, Color c1, float r1, Vector3 end, Color c2, float r2, Color ct)
-        {
+        public EdgeInfo(Vector3 start, Color c1, float r1, Vector3 end, Color c2, float r2, Color ct) {
             Start = start;
             End = end;
             RadiusS = r1;
@@ -28,29 +25,23 @@ namespace ORLabs.Graphics.Graphs
         }
 
         private TrapezoidBuilder.TrapezoidPoints points;
-        public Vector3 TopLeft
-        {
+        public Vector3 TopLeft {
             get { return points.P1; }
         }
-        public Vector3 TopRight
-        {
+        public Vector3 TopRight {
             get { return points.P2; }
         }
-        public Vector3 BottomLeft
-        {
+        public Vector3 BottomLeft {
             get { return points.P4; }
         }
-        public Vector3 BottomRight
-        {
+        public Vector3 BottomRight {
             get { return points.P3; }
         }
 
-        public Vector3 StartCR
-        {
+        public Vector3 StartCR {
             get { return new Vector3(Start.X, Start.Y, RadiusS); }
         }
-        public Vector3 EndCR
-        {
+        public Vector3 EndCR {
             get { return new Vector3(End.X, End.Y, RadiusE); }
         }
 
@@ -60,8 +51,7 @@ namespace ORLabs.Graphics.Graphs
         public static readonly Vector2 CornerBR = new Vector2(1, -1);
     }
 
-    public class EdgeList : BatchList<EdgeInfo, EdgeList.Vertex>
-    {
+    public class EdgeList : BatchList<EdgeInfo, EdgeList.Vertex> {
         private static IndexBuffer iBuffer;
         private const int IndicesPerRect = 6;
 #if HIDEF
@@ -75,20 +65,16 @@ namespace ORLabs.Graphics.Graphs
         public bool ShouldBuild;
 
         public EdgeList(GraphicsDevice g, int rectCount)
-            : base(g, rectCount < MaxLines ? rectCount : MaxLines, 4)
-        {
+            : base(g, rectCount < MaxLines ? rectCount : MaxLines, 4) {
         }
-        public override void resizeList(int maxCount)
-        {
+        public override void resizeList(int maxCount) {
             base.resizeList(maxCount < MaxLines ? maxCount : MaxLines);
         }
 
         protected VertexBuffer vBuffer;
-        public override void buildBuffers(GraphicsDevice g)
-        {
-            if (maxCount == 0) { vBuffer = null; return; }
-            if (iBuffer == null || iBuffer.IndexCount < maxCount * IndicesPerRect)
-            {
+        public override void buildBuffers(GraphicsDevice g) {
+            if(maxCount == 0) { vBuffer = null; return; }
+            if(iBuffer == null || iBuffer.IndexCount < maxCount * IndicesPerRect) {
                 iBuffer = new IndexBuffer(g, IndexSize, maxCount * IndicesPerRect, BufferUsage.WriteOnly);
 #if HIDEF
                 int[] ind = new int[maxCount * IndicesPerRect];
@@ -105,8 +91,7 @@ namespace ORLabs.Graphics.Graphs
 #elif REACH
                 short[] ind = new short[maxCount * IndicesPerRect];
                 int i = 0, ii = 0;
-                for (short vi = 0; i < maxCount; i++, ii += 6, vi += 4)
-                {
+                for(short vi = 0; i < maxCount; i++, ii += 6, vi += 4) {
                     ind[ii] = vi;
                     ind[ii + 1] = (short)(vi + 1);
                     ind[ii + 2] = (short)(vi + 2);
@@ -120,32 +105,26 @@ namespace ORLabs.Graphics.Graphs
             vBuffer = new VertexBuffer(g, Vertex.Declaration, maxCount * vPerInstance, BufferUsage.WriteOnly);
         }
 
-        public override void end()
-        {
-            if (vBuffer != null)
-            {
+        public override void end() {
+            if(vBuffer != null) {
                 vBuffer.SetData<Vertex>(vertices);
                 ShouldBuild = false;
             }
         }
 
-        public override void set(GraphicsDevice g)
-        {
+        public override void set(GraphicsDevice g) {
             g.SetVertexBuffer(vBuffer);
             g.Indices = iBuffer;
         }
-        public override void draw(GraphicsDevice g)
-        {
+        public override void draw(GraphicsDevice g) {
             g.DrawIndexedPrimitives(PrimitiveType.TriangleList, 0, 0, count * 4, 0, count * 2);
         }
 
-        public override void add(EdgeInfo data)
-        {
+        public override void add(EdgeInfo data) {
             set(count, data);
             count++;
         }
-        public override void set(int i, EdgeInfo data)
-        {
+        public override void set(int i, EdgeInfo data) {
             i = i * vPerInstance;
             vertices[i + 0] = new Vertex(data.TopLeft, 0f, data.StartCR, EdgeInfo.CornerTL, data.ColorS, data.ColorT);
             vertices[i + 1] = new Vertex(data.TopRight, 1f, data.EndCR, EdgeInfo.CornerTR, data.ColorE, data.ColorT);
@@ -154,8 +133,7 @@ namespace ORLabs.Graphics.Graphs
             ShouldBuild = true;
         }
 
-        public void setColor(int i, Color c1, Color c2, Color ct)
-        {
+        public void setColor(int i, Color c1, Color c2, Color ct) {
             i = i * vPerInstance;
             vertices[i + 0].Color1 = c1; vertices[i + 0].Color2 = ct;
             vertices[i + 1].Color1 = c2; vertices[i + 1].Color2 = ct;
@@ -164,16 +142,14 @@ namespace ORLabs.Graphics.Graphs
             ShouldBuild = true;
         }
 
-        public struct Vertex : IVertexType
-        {
+        public struct Vertex : IVertexType {
             public Vector4 PosRatio;
             public Vector3 CenRad;
             public Vector2 Corner;
             public Color Color1;
             public Color Color2;
 
-            public Vertex(Vector3 pos, float r, Vector3 cenRad, Vector2 corner, Color c1, Color c2)
-            {
+            public Vertex(Vector3 pos, float r, Vector3 cenRad, Vector2 corner, Color c1, Color c2) {
                 PosRatio = new Vector4(pos, r);
                 CenRad = cenRad;
                 Corner = corner;
@@ -188,19 +164,16 @@ namespace ORLabs.Graphics.Graphs
                 new VertexElement(sizeof(float) * 9, VertexElementFormat.Color, VertexElementUsage.Color, 0),
                 new VertexElement(sizeof(float) * 10, VertexElementFormat.Color, VertexElementUsage.Color, 1)
                 );
-            public VertexDeclaration VertexDeclaration
-            {
+            public VertexDeclaration VertexDeclaration {
                 get { return Declaration; }
             }
         }
     }
 
-    public static class TrapezoidBuilder
-    {
+    public static class TrapezoidBuilder {
         private const float RadiansToDegrees = (float)(180 / Math.PI);
 
-        public static TrapezoidPoints calc(Vector3 Center1, float Radius1, Vector3 Center2, float Radius2)
-        {
+        public static TrapezoidPoints calc(Vector3 Center1, float Radius1, Vector3 Center2, float Radius2) {
             TrapezoidPoints TrapPoints = new TrapezoidPoints();
 
             // Get the angle of the line C0-C1 in degrees. This will be used in conjunction with angleA to determine the vector of these points
@@ -254,8 +227,7 @@ namespace ORLabs.Graphics.Graphs
             return TrapPoints;
         }
 
-        private static float CalculateAngleA(Vector3 pointC0, Vector3 pointC1, float radius0, float radius1)
-        {
+        private static float CalculateAngleA(Vector3 pointC0, Vector3 pointC1, float radius0, float radius1) {
             float xDistance = pointC1.X - pointC0.X;
             float yDistance = pointC1.Y - pointC0.Y;
 
@@ -271,8 +243,7 @@ namespace ORLabs.Graphics.Graphs
 
             return angleAInDegrees;
         }
-        private static float CalculateAngleRelativeToXAxis(Vector3 point0, Vector3 point1)
-        {
+        private static float CalculateAngleRelativeToXAxis(Vector3 point0, Vector3 point1) {
             // So C1x is subtracted from C2x and C1y from C2y. Note that it’s important to subtract 
             // the 1st value from the 2nd to help determine which quadrant the angle is in.
             float x = point1.X - point0.X;
@@ -291,8 +262,7 @@ namespace ORLabs.Graphics.Graphs
             return relativeAngleInDegrees;
         }
 
-        public struct TrapezoidPoints
-        {
+        public struct TrapezoidPoints {
             public Vector3 P1;
             public Vector3 P2;
             public Vector3 P3;
